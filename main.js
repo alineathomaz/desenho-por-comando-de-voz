@@ -3,11 +3,11 @@ y = 0;
 
 screenWidth = 0;
 screenHeight = 0;
-apple = 0;
-speakData = 0;
+apple = "";
+speakData = "";
 toNumber = 0;
 
-drawApple = "set";
+drawApple = "";
 
 var SpeechRecognition = window.webkitSpeechRecognition;
   
@@ -16,7 +16,6 @@ var recognition = new SpeechRecognition();
 function start()
 {
   document.getElementById("status").innerHTML = "O sistema está ouvindo. Por favor, fale.";
-  document.getElementById("status").innerHTML = to_number + "maçãs desenhadas";
   recognition.start();
 } 
  
@@ -29,20 +28,39 @@ recognition.onresult = function(event) {
     document.getElementById("status").innerHTML = "A fala foi reconhecida: " + content; 
 
     to_number = Number(content);
-    if(Number.isInteger(to_number));
+    if(Number.isInteger(to_number))
+    {
+      document.getElementById("status").innerHTML = "A maçã começou a ser desenhada."; 
+      drawApple = "set";
+    }
+   else
+   {
+     document.getElementById("status").innerHTML = "O número não foi reconhecido.";
+   }
 }
 function preload(){
-  loadImage(apple.png)
+  apple = loadImage("apple.png")
 }
 function setup() {
-  sreen_width = window.innerHeight
- 
+  screenWidth = window.innerWidth;
+  screenHeight = window.innerHeight;
+
+  canvas = createCanvas(screenWidth, screenHeight-150);
+  canvas.position(0,150);
 }
 
 function draw() {
   if(drawApple == "set")
   {
-    document.getElementById("status").innerHTML = toNumber + " maçãs desenhadas";
+    for(var i = 1 ; i <= to_number; i++)
+    {
+      x = Math.floor(Math.random() * 700);
+      y = Math.floor(Math.random() * 400);
+      image(apple, x, y, 50, 50);
+    }
+    document.getElementById("status").innerHTML = to_number + " maçãs desenhadas";
+    speakData = to_number + " maçãs desenhadas";
+    speak();
     drawApple = "";
   }
 }
@@ -54,5 +72,5 @@ function speak(){
 
     synth.speak(utterThis);
 
-    speakData = "to number";
+    speakData = "";
 }
